@@ -1,0 +1,88 @@
+CREATE SCHEMA IF NOT EXISTS `fretesgracianoespejo` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `fretesgracianoespejo` ;
+
+-- -----------------------------------------------------
+-- Table `fretesgracianoespejo`.`Jornada`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fretesgracianoespejo`.`Jornada` (
+  `idJornada` INT NOT NULL AUTO_INCREMENT,
+  `tituloJornada` VARCHAR(45) NULL,
+  `objetivoJornada` VARCHAR(45) NULL,
+  PRIMARY KEY (`idJornada`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `fretesgracianoespejo`.`Material`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fretesgracianoespejo`.`Material` (
+  `idMaterial` INT NOT NULL AUTO_INCREMENT,
+  `tituloMaterial` VARCHAR(45) NULL,
+  `categoriaMaterial` VARCHAR(45) NULL,
+  `fuenteMaterial` VARCHAR(45) NULL,
+  `enlaceMaterial` VARCHAR(45) NULL,
+  `procedenciaMaterial` VARCHAR(45) NULL,
+  `Jornada_idJornada` INT NOT NULL,
+  PRIMARY KEY (`idMaterial`, `Jornada_idJornada`),
+  INDEX `fk_Material_Jornada1_idx` (`Jornada_idJornada` ASC) VISIBLE,
+  CONSTRAINT `fk_Material_Jornada1`
+    FOREIGN KEY (`Jornada_idJornada`)
+    REFERENCES `fretesgracianoespejo`.`Jornada` (`idJornada`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `fretesgracianoespejo`.`Categorias`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fretesgracianoespejo`.`Categorias` (
+  `idCategorias` INT NOT NULL AUTO_INCREMENT,
+  `nombreCategoria` VARCHAR(45) NULL,
+  PRIMARY KEY (`idCategorias`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `fretesgracianoespejo`.`Propuestas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fretesgracianoespejo`.`Propuestas` (
+  `idPropuestas` INT NOT NULL AUTO_INCREMENT,
+  `tituloPropuesta` VARCHAR(45) NULL,
+  `autorPropuesta` VARCHAR(45) NULL,
+  `estadoPropuesta` VARCHAR(45) NULL,
+  `descripcionPropuesta` VARCHAR(45) NULL,
+  `motivoRechazoPropuesta` VARCHAR(45) NULL,
+  `origenPropuesta` VARCHAR(45) NULL,
+  `motivacionPropuesta` VARCHAR(45) NULL,
+  `fechaPropuesta` DATE NULL,
+  `Categorias_idCategorias` INT NOT NULL,
+  PRIMARY KEY (`idPropuestas`, `Categorias_idCategorias`),
+  INDEX `fk_Propuestas_Categorias1_idx` (`Categorias_idCategorias` ASC) VISIBLE,
+  CONSTRAINT `fk_Propuestas_Categorias1`
+    FOREIGN KEY (`Categorias_idCategorias`)
+    REFERENCES `fretesgracianoespejo`.`Categorias` (`idCategorias`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `fretesgracianoespejo`.`material/propuesta`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fretesgracianoespejo`.`material/propuesta` (
+  `Propuestas_idPropuestas` INT NOT NULL,
+  `Material_idMaterial` INT NOT NULL,
+  PRIMARY KEY (`Propuestas_idPropuestas`, `Material_idMaterial`),
+  INDEX `fk_material/propuesta_Material1_idx` (`Material_idMaterial` ASC) VISIBLE,
+  CONSTRAINT `fk_material/propuesta_Propuestas`
+    FOREIGN KEY (`Propuestas_idPropuestas`)
+    REFERENCES `fretesgracianoespejo`.`Propuestas` (`idPropuestas`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_material/propuesta_Material1`
+    FOREIGN KEY (`Material_idMaterial`)
+    REFERENCES `fretesgracianoespejo`.`Material` (`idMaterial`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
